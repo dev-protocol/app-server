@@ -4,10 +4,13 @@
 	"description": "Template repository for using TypeScript",
 	"main": "index.js",
 	"scripts": {
+    "start": "func start",
+    "prestart": "npm run build",
 		"test": "",
 		"lint": "npm run lint:eslint && npm run lint:format",
 		"lint:eslint": "eslint . --ext .ts,.js --fix --ignore-pattern node_modules/",
-		"lint:format": "prettier --write '**/*.{js,json,md,yml}'"
+		"lint:format": "prettier --write '**/*.{js,json,md,yml}'",
+    "build": "tsc"
 	},
 	"author": "",
 	"license": "MPL-2.0",
@@ -23,7 +26,8 @@
 		"eslint-plugin-prettier": "^3.1.2",
 		"husky": "^4.2.0",
 		"prettier": "^1.19.1",
-		"typescript": "^3.7.5"
+		"typescript": "^3.7.5",
+    "@azure/functions": "^1.0.2-beta2",
 	},
 	"husky": {
 		"hooks": {
