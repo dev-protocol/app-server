@@ -1,28 +1,49 @@
 /* eslint-disable accessor-pairs */
-import test from 'ava'
+import test, { before, after } from 'ava'
 import { Context, HttpRequest } from '@azure/functions'
+import { ChildProcess } from 'child_process'
+import { launchGanache } from '../utils/test'
+import Web3 from 'web3'
 import httpTrigger from '.'
 
-const context = (res: (value: any) => void): Context =>
+const context = (resolve: (value?: unknown) => void): Context =>
 	(({
 		set res(v: any) {
-			res(v)
+			resolve(v)
 		}
 	} as unknown) as Context)
-
 const req = (data: any): HttpRequest => (data as unknown) as HttpRequest
 
-test('returns value', async t => {
-	await httpTrigger(
-		context(data => {
-			t.deepEqual(data, {
-				body: 'Hello Alice'
+let ganache: ChildProcess
+
+before(async () => {
+	ganache = await launchGanache(7545)
+})
+
+after(() => {
+	process.kill(ganache.pid)
+})
+
+test('this is just a prototype', async t => {
+	const provider = 'ws://localhost:7545'
+	const web3 = new Web3(provider)
+	const account = web3.eth.accounts.create()
+	const { signature } = account.sign('hello')
+
+	const res = await new Promise(resolve => {
+		httpTrigger(
+			context(resolve),
+			req({
+				body: {
+					provider,
+					signature: `${signature}`
+				}
 			})
-		}),
-		req({
-			query: {
-				name: 'Alice'
-			}
-		})
-	)
+		)
+	})
+
+	t.deepEqual(res, {
+		status: 200,
+		body: account.address
+	})
 })
