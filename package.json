@@ -8,7 +8,7 @@
 		"prestart": "npm run build",
 		"test": "",
 		"lint": "npm run lint:eslint && npm run lint:format",
-		"lint:eslint": "eslint . --ext .ts,.js --fix --ignore-pattern node_modules/",
+		"lint:eslint": "eslint . --ext .ts,.js --fix",
 		"lint:format": "prettier --write '**/*.{js,json,md,yml}'",
 		"build": "tsc"
 	},
