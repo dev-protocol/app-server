@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "func start",
 		"prestart": "npm run build",
-		"test": "",
+		"test": "ava",
 		"lint": "npm run lint:eslint && npm run lint:format",
 		"lint:eslint": "eslint . --ext .ts,.js --fix",
 		"lint:format": "prettier --write '**/*.{js,json,md,yml}'",
@@ -30,6 +30,17 @@
 		"prettier": "^1.19.1",
 		"ts-node": "^8.6.2",
 		"typescript": "^3.7.5"
+	},
+	"ava": {
+		"files": [
+			"**/*.test.ts"
+		],
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		]
 	},
 	"husky": {
 		"hooks": {
