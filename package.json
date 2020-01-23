@@ -49,6 +49,10 @@
 		}
 	},
 	"dependencies": {
+		"@dev-protocol/dev-kit-js": "^0.1.0",
+		"bignumber.js": "^9.0.0",
+		"install": "^0.13.0",
+		"npm": "^6.13.6",
 		"web3": "^1.2.5-rc.0"
 	},
 	"repository": {
