@@ -1,10 +1,13 @@
 /* eslint-disable accessor-pairs */
 import test, { before, after } from 'ava'
 import { Context, HttpRequest } from '@azure/functions'
+import * as lockup from '@dev-protocol/dev-kit-js/esm/lockup'
 import { ChildProcess } from 'child_process'
+import { stub } from 'sinon'
 import { launchGanache } from '../utils/test'
 import Web3 from 'web3'
-import httpTrigger from '.'
+import { httpTrigger } from '.'
+import { cipher } from '../utils/crypto'
 
 const context = (resolve: (value?: unknown) => void): Context =>
 	(({
@@ -29,11 +32,25 @@ test('this is just a prototype', async t => {
 	const web3 = new Web3(provider)
 	const account = web3.eth.accounts.create()
 	const { signature } = account.sign('hello')
+	const property = '0x3EE1dF804544B2326b827AE30dDC9A93C35002D5'
+	const ciphertext = cipher('Hello World', 'password')
+	const messages = [{ address: property, ciphertext }]
+
+	process.env.CIPHER_KEY = 'password'
+
+	stub(lockup, 'createLockupContract')
+		.onCall(0)
+		.returns(() => ({
+			getValue: async () => '1000000000000000000'
+		}))
 
 	const res = await new Promise(resolve => {
-		httpTrigger(
+		httpTrigger(messages)(
 			context(resolve),
 			req({
+				query: {
+					property
+				},
 				body: {
 					provider,
 					signature: `${signature}`
@@ -44,6 +61,6 @@ test('this is just a prototype', async t => {
 
 	t.deepEqual(res, {
 		status: 200,
-		body: account.address
+		body: 'Hello World'
 	})
 })

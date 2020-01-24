@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import messages from './messages.json'
 import { createLockupContract } from '@dev-protocol/dev-kit-js/esm/lockup'
 import BigNumber from 'bignumber.js'
-import { configuredDecipher } from '../utils/crypto.js'
+import { configuredDecipher } from '../utils/crypto'
 
 type SecretMessages = Array<{
 	address: string

@@ -17,6 +17,7 @@
 	"devDependencies": {
 		"@azure/functions": "^1.0.2-beta2",
 		"@types/dotenv": "^8.2.0",
+		"@types/sinon": "^7.5.1",
 		"@typescript-eslint/eslint-plugin": "^2.17.0",
 		"@typescript-eslint/parser": "^2.17.0",
 		"ava": "^3.0.0",
@@ -26,9 +27,11 @@
 		"eslint-config-xo": "^0.27.2",
 		"eslint-config-xo-typescript": "^0.24.1",
 		"eslint-plugin-prettier": "^3.1.2",
+		"esm": "^3.2.25",
 		"ganache-cli": "^6.8.2",
 		"husky": "^4.2.0",
 		"prettier": "^1.19.1",
+		"sinon": "^8.1.1",
 		"ts-node": "^8.6.2",
 		"typescript": "^3.7.5"
 	},
@@ -40,7 +43,8 @@
 			"ts"
 		],
 		"require": [
-			"ts-node/register"
+			"ts-node/register",
+			"esm"
 		]
 	},
 	"husky": {
