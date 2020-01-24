@@ -86,7 +86,7 @@ test('returns deciphered text', async t => {
 	})
 })
 
-test('returns a response with status code 400 when property address is not founded in query string', async t => {
+test('returns a response with status code 400 when property address is not founded in the query string', async t => {
 	const { provider, messages, signature } = prepare({
 		message: 'Hello World'
 	})
@@ -99,6 +99,31 @@ test('returns a response with status code 400 when property address is not found
 				body: {
 					provider,
 					signature
+				}
+			})
+		)
+	})
+
+	t.deepEqual(res, {
+		status: 400,
+		body: ''
+	})
+})
+
+test('returns a response with status code 400 when a signature is not founded in the request body', async t => {
+	const { provider, messages, property } = prepare({
+		message: 'Hello World'
+	})
+
+	const res = await new Promise(resolve => {
+		httpTrigger(messages)(
+			context(resolve),
+			req({
+				query: {
+					property
+				},
+				body: {
+					provider
 				}
 			})
 		)
