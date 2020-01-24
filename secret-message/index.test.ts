@@ -110,8 +110,8 @@ test('returns a response with status code 400 when property address is not found
 	})
 })
 
-test('returns a response with status code 400 when a signature is not founded in the request body', async t => {
-	const { provider, messages, property } = prepare({
+test('returns a response with status code 400 when a provider is not founded in the request body', async t => {
+	const { messages, signature, property } = prepare({
 		message: 'Hello World'
 	})
 
@@ -123,7 +123,7 @@ test('returns a response with status code 400 when a signature is not founded in
 					property
 				},
 				body: {
-					provider
+					signature
 				}
 			})
 		)
