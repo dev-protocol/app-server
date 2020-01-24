@@ -162,3 +162,31 @@ test('returns a response with status code 402 when sent from an account that sta
 		body: ''
 	})
 })
+
+test('returns a response with status code 404 when a property address is not founded in the stored messages', async t => {
+	const { provider, messages, signature, property } = prepare({
+		message: 'Hello World'
+	})
+	const msg = messages.find(({ address }) => address === property)
+	msg.address = '0x000'
+
+	const res = await new Promise(resolve => {
+		httpTrigger(messages)(
+			context(resolve),
+			req({
+				query: {
+					property
+				},
+				body: {
+					provider,
+					signature
+				}
+			})
+		)
+	})
+
+	t.deepEqual(res, {
+		status: 404,
+		body: ''
+	})
+})
