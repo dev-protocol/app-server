@@ -138,6 +138,29 @@ test('returns a response with status code 400 when a provider is not founded in 
 	})
 })
 
+test('returns a response with status code 400 when a signature is not founded in the request body', async t => {
+	const { provider, messages, property } = prepare({
+		message: 'Hello World'
+	})
+
+	const res = await httpTrigger(
+		messages,
+		req({
+			query: {
+				property
+			},
+			body: {
+				provider
+			}
+		})
+	)
+
+	t.deepEqual(res, {
+		status: 400,
+		body: ''
+	})
+})
+
 test('returns a response with status code 402 when sent from an account that staking to specified property is less than 1 DEV', async t => {
 	const { provider, messages, signature } = prepare({
 		message: 'Hello World'
