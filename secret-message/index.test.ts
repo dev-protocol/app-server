@@ -18,15 +18,13 @@ const context = (resolve: (value?: unknown) => void): Context =>
 const req = (data: any): HttpRequest => (data as unknown) as HttpRequest
 
 let ganache: ChildProcess
-let getValueReturns = '1000000000000000000'
+const store = new Map<string, string>()
 
 before(async () => {
 	ganache = await launchGanache(7545)
-	stub(lockup, 'createLockupContract')
-		.onCall(0)
-		.returns(() => ({
-			getValue: async () => getValueReturns
-		}))
+	stub(lockup, 'createLockupContract').callsFake(() => () => ({
+		getValue: async (address: string) => store.get(address)
+	}))
 })
 
 after(() => {
@@ -51,6 +49,7 @@ const prepare = ({
 	const property = '0x3EE1dF804544B2326b827AE30dDC9A93C35002D5'
 	const ciphertext = cipher(message, 'password')
 	const messages = [{ address: property, ciphertext }]
+	store.set(property, '1000000000000000000')
 	process.env.CIPHER_KEY = 'password'
 	return {
 		provider,
@@ -131,6 +130,35 @@ test('returns a response with status code 400 when a provider is not founded in 
 
 	t.deepEqual(res, {
 		status: 400,
+		body: ''
+	})
+})
+
+test('returns a response with status code 402 when sent from an account that staking to specified property is less than 1 DEV', async t => {
+	const { provider, messages, signature } = prepare({
+		message: 'Hello World'
+	})
+	const property = '0x2C55AFeDC55525f974D23E9FE410478aF8a0F6Ce'
+
+	store.set(property, '999999999999999999')
+
+	const res = await new Promise(resolve => {
+		httpTrigger(messages)(
+			context(resolve),
+			req({
+				query: {
+					property
+				},
+				body: {
+					provider,
+					signature
+				}
+			})
+		)
+	})
+
+	t.deepEqual(res, {
+		status: 402,
 		body: ''
 	})
 })
