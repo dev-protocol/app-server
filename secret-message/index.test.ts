@@ -18,9 +18,15 @@ const context = (resolve: (value?: unknown) => void): Context =>
 const req = (data: any): HttpRequest => (data as unknown) as HttpRequest
 
 let ganache: ChildProcess
+let getValueReturns = '1000000000000000000'
 
 before(async () => {
 	ganache = await launchGanache(7545)
+	stub(lockup, 'createLockupContract')
+		.onCall(0)
+		.returns(() => ({
+			getValue: async () => getValueReturns
+		}))
 })
 
 after(() => {
@@ -54,16 +60,10 @@ const prepare = ({
 	}
 }
 
-test('this is just a prototype', async t => {
+test('returns deciphered text', async t => {
 	const { provider, messages, signature, property } = prepare({
 		message: 'Hello World'
 	})
-
-	stub(lockup, 'createLockupContract')
-		.onCall(0)
-		.returns(() => ({
-			getValue: async () => '1000000000000000000'
-		}))
 
 	const res = await new Promise(resolve => {
 		httpTrigger(messages)(
@@ -74,7 +74,7 @@ test('this is just a prototype', async t => {
 				},
 				body: {
 					provider,
-					signature: `${signature}`
+					signature
 				}
 			})
 		)
@@ -83,5 +83,29 @@ test('this is just a prototype', async t => {
 	t.deepEqual(res, {
 		status: 200,
 		body: 'Hello World'
+	})
+})
+
+test('returns a response with status code 400 when property address is not founded in query string', async t => {
+	const { provider, messages, signature } = prepare({
+		message: 'Hello World'
+	})
+
+	const res = await new Promise(resolve => {
+		httpTrigger(messages)(
+			context(resolve),
+			req({
+				query: {},
+				body: {
+					provider,
+					signature
+				}
+			})
+		)
+	})
+
+	t.deepEqual(res, {
+		status: 400,
+		body: ''
 	})
 })
