@@ -5,7 +5,7 @@ import { createLockupContract } from '@dev-protocol/dev-kit-js/esm/lockup'
 import BigNumber from 'bignumber.js'
 import { configuredDecipher } from '../utils/crypto'
 
-type SecretMessages = Array<{
+export type SecretMessages = Array<{
 	address: string
 	ciphertext: string
 }>
