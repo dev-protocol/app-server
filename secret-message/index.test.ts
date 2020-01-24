@@ -6,16 +6,26 @@ import { ChildProcess } from 'child_process'
 import { stub } from 'sinon'
 import { launchGanache } from '../utils/test'
 import Web3 from 'web3'
-import { httpTrigger, SecretMessages } from '.'
+import { httpTrigger as _httpTrigger, SecretMessages } from '.'
 import { cipher } from '../utils/crypto'
 
-const context = (resolve: (value?: unknown) => void): Context =>
-	(({
-		set res(v: any) {
-			resolve(v)
-		}
-	} as unknown) as Context)
 const req = (data: any): HttpRequest => (data as unknown) as HttpRequest
+const httpTrigger = async (
+	messages: SecretMessages,
+	request: HttpRequest
+): Promise<{
+	[key: string]: any
+}> =>
+	new Promise(resolve => {
+		_httpTrigger(messages)(
+			({
+				set res(v: any) {
+					resolve(v)
+				}
+			} as unknown) as Context,
+			request
+		)
+	})
 
 let ganache: ChildProcess
 const store = new Map<string, string>()
@@ -64,20 +74,18 @@ test('returns deciphered text', async t => {
 		message: 'Hello World'
 	})
 
-	const res = await new Promise(resolve => {
-		httpTrigger(messages)(
-			context(resolve),
-			req({
-				query: {
-					property
-				},
-				body: {
-					provider,
-					signature
-				}
-			})
-		)
-	})
+	const res = await httpTrigger(
+		messages,
+		req({
+			query: {
+				property
+			},
+			body: {
+				provider,
+				signature
+			}
+		})
+	)
 
 	t.deepEqual(res, {
 		status: 200,
@@ -90,18 +98,16 @@ test('returns a response with status code 400 when property address is not found
 		message: 'Hello World'
 	})
 
-	const res = await new Promise(resolve => {
-		httpTrigger(messages)(
-			context(resolve),
-			req({
-				query: {},
-				body: {
-					provider,
-					signature
-				}
-			})
-		)
-	})
+	const res = await httpTrigger(
+		messages,
+		req({
+			query: {},
+			body: {
+				provider,
+				signature
+			}
+		})
+	)
 
 	t.deepEqual(res, {
 		status: 400,
@@ -114,19 +120,17 @@ test('returns a response with status code 400 when a provider is not founded in 
 		message: 'Hello World'
 	})
 
-	const res = await new Promise(resolve => {
-		httpTrigger(messages)(
-			context(resolve),
-			req({
-				query: {
-					property
-				},
-				body: {
-					signature
-				}
-			})
-		)
-	})
+	const res = await httpTrigger(
+		messages,
+		req({
+			query: {
+				property
+			},
+			body: {
+				signature
+			}
+		})
+	)
 
 	t.deepEqual(res, {
 		status: 400,
@@ -142,20 +146,18 @@ test('returns a response with status code 402 when sent from an account that sta
 
 	store.set(property, '999999999999999999')
 
-	const res = await new Promise(resolve => {
-		httpTrigger(messages)(
-			context(resolve),
-			req({
-				query: {
-					property
-				},
-				body: {
-					provider,
-					signature
-				}
-			})
-		)
-	})
+	const res = await httpTrigger(
+		messages,
+		req({
+			query: {
+				property
+			},
+			body: {
+				provider,
+				signature
+			}
+		})
+	)
 
 	t.deepEqual(res, {
 		status: 402,
@@ -170,20 +172,18 @@ test('returns a response with status code 404 when a property address is not fou
 	const msg = messages.find(({ address }) => address === property)
 	msg.address = '0x000'
 
-	const res = await new Promise(resolve => {
-		httpTrigger(messages)(
-			context(resolve),
-			req({
-				query: {
-					property
-				},
-				body: {
-					provider,
-					signature
-				}
-			})
-		)
-	})
+	const res = await httpTrigger(
+		messages,
+		req({
+			query: {
+				property
+			},
+			body: {
+				provider,
+				signature
+			}
+		})
+	)
 
 	t.deepEqual(res, {
 		status: 404,
