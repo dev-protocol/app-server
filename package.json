@@ -10,7 +10,8 @@
 		"lint": "npm run lint:eslint && npm run lint:format",
 		"lint:eslint": "eslint . --ext .ts,.js --fix",
 		"lint:format": "prettier --write '**/*.{js,json,md,yml}'",
-		"build": "tsc"
+		"build": "tsc",
+		"add": "ts-node utils/add-message.ts"
 	},
 	"author": "",
 	"license": "MPL-2.0",

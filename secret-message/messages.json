@@ -1,6 +1,4 @@
 [
-	{
-		"address": "test",
-		"ciphertext": "hello"
-	}
+	{ "address": "test", "ciphertext": "hello" },
+	{ "address": "0x000000", "ciphertext": "7ca518919273827b1932438f916a9196" }
 ]
