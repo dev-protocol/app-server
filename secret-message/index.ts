@@ -3,6 +3,7 @@ import Web3 from 'web3'
 import messages from './messages.json'
 import { createLockupContract } from '@dev-protocol/dev-kit-js/esm/lockup'
 import BigNumber from 'bignumber.js'
+import { config } from 'dotenv'
 import { configuredDecipher } from '../utils/crypto'
 
 export type SecretMessages = Array<{
@@ -27,16 +28,20 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 		const response = responseCreator(context)
 		const { query, body } = req
 		const { property } = query
-		const { signature, provider } = body
+		const { signature, network } = body
 		if (
 			property === undefined ||
 			signature === undefined ||
-			provider === undefined
+			network === undefined
 		) {
 			return response(400)
 		}
 
-		const web3 = new Web3(provider)
+		const web3 = new Web3(
+			`https://${network as string}.infura.io/v3/${
+				config().parsed.INFURA_IO_SECRET
+			}`
+		)
 		const account = web3.eth.accounts.recover('hello', signature)
 		const { getValue } = createLockupContract(web3)()
 

@@ -42,27 +42,27 @@ after(() => {
 })
 
 const prepare = ({
-	provider = 'ws://localhost:7545',
 	message
 }: {
-	provider?: string
 	message: string
 }): {
-	provider: string
+	network: string
 	messages: SecretMessages
 	signature: string
 	property: string
 } => {
-	const web3 = new Web3(provider)
+	const web3 = new Web3('ws://localhost:7545')
 	const account = web3.eth.accounts.create()
 	const { signature } = account.sign('hello')
 	const property = '0x3EE1dF804544B2326b827AE30dDC9A93C35002D5'
 	const ciphertext = cipher(message, 'password')
 	const messages = [{ address: property, ciphertext }]
+	const network = 'ropsten'
 	store.set(property, '1000000000000000000')
 	process.env.CIPHER_KEY = 'password'
+	process.env.INFURA_IO_SECRET = 'a94a87a07f4d4065a4284190baad8b38' // For testing
 	return {
-		provider,
+		network,
 		messages,
 		signature,
 		property
@@ -70,7 +70,7 @@ const prepare = ({
 }
 
 test('returns deciphered text', async t => {
-	const { provider, messages, signature, property } = prepare({
+	const { network, messages, signature, property } = prepare({
 		message: 'Hello World'
 	})
 
@@ -81,7 +81,7 @@ test('returns deciphered text', async t => {
 				property
 			},
 			body: {
-				provider,
+				network,
 				signature
 			}
 		})
@@ -94,7 +94,7 @@ test('returns deciphered text', async t => {
 })
 
 test('returns a response with status code 400 when property address is not founded in the query string', async t => {
-	const { provider, messages, signature } = prepare({
+	const { network, messages, signature } = prepare({
 		message: 'Hello World'
 	})
 
@@ -103,7 +103,7 @@ test('returns a response with status code 400 when property address is not found
 		req({
 			query: {},
 			body: {
-				provider,
+				network,
 				signature
 			}
 		})
@@ -115,7 +115,7 @@ test('returns a response with status code 400 when property address is not found
 	})
 })
 
-test('returns a response with status code 400 when a provider is not founded in the request body', async t => {
+test('returns a response with status code 400 when a network is not founded in the request body', async t => {
 	const { messages, signature, property } = prepare({
 		message: 'Hello World'
 	})
@@ -139,7 +139,7 @@ test('returns a response with status code 400 when a provider is not founded in 
 })
 
 test('returns a response with status code 400 when a signature is not founded in the request body', async t => {
-	const { provider, messages, property } = prepare({
+	const { network, messages, property } = prepare({
 		message: 'Hello World'
 	})
 
@@ -150,7 +150,7 @@ test('returns a response with status code 400 when a signature is not founded in
 				property
 			},
 			body: {
-				provider
+				network
 			}
 		})
 	)
@@ -162,7 +162,7 @@ test('returns a response with status code 400 when a signature is not founded in
 })
 
 test('returns a response with status code 402 when sent from an account that staking to specified property is less than 1 DEV', async t => {
-	const { provider, messages, signature } = prepare({
+	const { network, messages, signature } = prepare({
 		message: 'Hello World'
 	})
 	const property = '0x2C55AFeDC55525f974D23E9FE410478aF8a0F6Ce'
@@ -176,7 +176,7 @@ test('returns a response with status code 402 when sent from an account that sta
 				property
 			},
 			body: {
-				provider,
+				network,
 				signature
 			}
 		})
@@ -189,7 +189,7 @@ test('returns a response with status code 402 when sent from an account that sta
 })
 
 test('returns a response with status code 404 when a property address is not founded in the stored messages', async t => {
-	const { provider, messages, signature, property } = prepare({
+	const { network, messages, signature, property } = prepare({
 		message: 'Hello World'
 	})
 	const msg = messages.find(({ address }) => address === property)
@@ -202,7 +202,7 @@ test('returns a response with status code 404 when a property address is not fou
 				property
 			},
 			body: {
-				provider,
+				network,
 				signature
 			}
 		})
