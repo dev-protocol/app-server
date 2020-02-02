@@ -1,7 +1,7 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import Web3 from 'web3'
 import messages from './messages.json'
-import { createLockupContract } from '@dev-protocol/dev-kit-js/cjs/lockup'
+import { createLockupContract } from '@dev-protocol/dev-kit-js/esm/lockup'
 import BigNumber from 'bignumber.js'
 import { config } from 'dotenv'
 import { configuredDecipher } from '../utils/crypto'
@@ -60,4 +60,4 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 		return response(200, decipheredMessage)
 	}
 
-export default httpTrigger(messages)
+export const run = httpTrigger(messages)
