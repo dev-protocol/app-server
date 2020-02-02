@@ -41,7 +41,13 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 			`https://${network}.infura.io/v3/${process.env.INFURA_IO_SECRET}`
 		)
 		const account = web3.eth.accounts.recover('hello', signature)
-		const { getValue } = createLockupContract(web3)()
+		const address =
+			network === 'mainnet'
+				? '0x71A25Bb05C68037B867E165c229D0c30e73f07Ad'
+				: network === 'ropsten'
+				? '0x8BCA5A841aFAD83b78c850de130dc046F3424736'
+				: ''
+		const { getValue } = createLockupContract(web3)(address)
 
 		const stakes = await getValue(property, account).then(x => new BigNumber(x))
 
