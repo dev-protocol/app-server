@@ -27,9 +27,8 @@ const digits18 = (x: number): BigNumber => new BigNumber(10).pow(18).times(x)
 export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 	async function(context: Context, req: HttpRequest): Promise<void> {
 		const response = responseCreator(context)
-		const { query, body } = req
-		const { property } = query
-		const { signature, network } = body
+		const { query } = req
+		const { property, signature, network } = query
 		if (
 			property === undefined ||
 			signature === undefined ||
@@ -39,9 +38,7 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 		}
 
 		const web3 = new Web3(
-			`https://${network as string}.infura.io/v3/${
-				process.env.INFURA_IO_SECRET
-			}`
+			`https://${network}.infura.io/v3/${process.env.INFURA_IO_SECRET}`
 		)
 		const account = web3.eth.accounts.recover('hello', signature)
 		const { getValue } = createLockupContract(web3)()

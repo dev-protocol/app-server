@@ -78,9 +78,7 @@ test('returns deciphered text', async t => {
 		messages,
 		req({
 			query: {
-				property
-			},
-			body: {
+				property,
 				network,
 				signature
 			}
@@ -101,8 +99,7 @@ test('returns a response with status code 400 when property address is not found
 	const res = await httpTrigger(
 		messages,
 		req({
-			query: {},
-			body: {
+			query: {
 				network,
 				signature
 			}
@@ -124,9 +121,7 @@ test('returns a response with status code 400 when a network is not founded in t
 		messages,
 		req({
 			query: {
-				property
-			},
-			body: {
+				property,
 				signature
 			}
 		})
@@ -147,9 +142,7 @@ test('returns a response with status code 400 when a signature is not founded in
 		messages,
 		req({
 			query: {
-				property
-			},
-			body: {
+				property,
 				network
 			}
 		})
@@ -173,9 +166,7 @@ test('returns a response with status code 402 when sent from an account that sta
 		messages,
 		req({
 			query: {
-				property
-			},
-			body: {
+				property,
 				network,
 				signature
 			}
@@ -199,9 +190,7 @@ test('returns a response with status code 404 when a property address is not fou
 		messages,
 		req({
 			query: {
-				property
-			},
-			body: {
+				property,
 				network,
 				signature
 			}
