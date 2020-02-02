@@ -42,7 +42,7 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 				`https://${network}.infura.io/v3/${process.env.INFURA_IO_PROJECT}`
 			)
 		)
-		const account = web3.eth.accounts.recover('hello', signature)
+		const account = web3.eth.accounts.recover('Please sign to confirm your address.', signature)
 		const address =
 			network === 'mainnet'
 				? '0x71A25Bb05C68037B867E165c229D0c30e73f07Ad'
