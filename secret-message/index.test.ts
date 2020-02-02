@@ -32,9 +32,11 @@ const store = new Map<string, string>()
 
 before(async () => {
 	ganache = await launchGanache(7545)
-	stub(lockup, 'createLockupContract').callsFake(() => () => ({
-		getValue: async (address: string) => store.get(address)
-	}))
+	stub(lockup, 'createLockupContract').callsFake(() => () =>
+		({
+			getValue: async (address: string) => store.get(address)
+		} as any)
+	)
 })
 
 after(() => {

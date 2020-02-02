@@ -16,21 +16,21 @@
 	"author": "",
 	"license": "MPL-2.0",
 	"devDependencies": {
-		"@azure/functions": "^1.0.2-beta2",
+		"@azure/functions": "^1.0.3",
 		"@types/dotenv": "^8.2.0",
 		"@types/sinon": "^7.5.1",
-		"@typescript-eslint/eslint-plugin": "^2.17.0",
-		"@typescript-eslint/parser": "^2.17.0",
-		"ava": "^3.0.0",
+		"@typescript-eslint/eslint-plugin": "^2.18.0",
+		"@typescript-eslint/parser": "^2.18.0",
+		"ava": "^3.1.0",
 		"dotenv": "^8.2.0",
 		"eslint": "^6.8.0",
-		"eslint-config-prettier": "^6.9.0",
+		"eslint-config-prettier": "^6.10.0",
 		"eslint-config-xo": "^0.27.2",
 		"eslint-config-xo-typescript": "^0.24.1",
 		"eslint-plugin-prettier": "^3.1.2",
 		"esm": "^3.2.25",
-		"ganache-cli": "^6.8.2",
-		"husky": "^4.2.0",
+		"ganache-cli": "^6.9.0",
+		"husky": "^4.2.1",
 		"prettier": "^1.19.1",
 		"sinon": "^8.1.1",
 		"ts-node": "^8.6.2",
@@ -54,11 +54,9 @@
 		}
 	},
 	"dependencies": {
-		"@dev-protocol/dev-kit-js": "^0.1.0",
+		"@dev-protocol/dev-kit-js": "^0.2.1",
 		"bignumber.js": "^9.0.0",
-		"install": "^0.13.0",
-		"npm": "^6.13.6",
-		"web3": "^1.2.5-rc.0"
+		"web3": "^1.2.6"
 	},
 	"repository": {
 		"type": "git",

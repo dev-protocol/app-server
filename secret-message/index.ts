@@ -47,6 +47,7 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 				: network === 'ropsten'
 				? '0x8BCA5A841aFAD83b78c850de130dc046F3424736'
 				: ''
+		console.log(address)
 		const { getValue } = createLockupContract(web3)(address)
 
 		const stakes = await getValue(property, account).then(x => new BigNumber(x))
