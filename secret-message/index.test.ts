@@ -1,7 +1,7 @@
 /* eslint-disable accessor-pairs */
 import test, { before, after } from 'ava'
 import { Context, HttpRequest } from '@azure/functions'
-import * as lockup from '@dev-protocol/dev-kit-js/esm/lockup'
+import * as lockup from '@dev-protocol/dev-kit-js/cjs/lockup'
 import { ChildProcess } from 'child_process'
 import { stub } from 'sinon'
 import { launchGanache } from '../utils/test'
