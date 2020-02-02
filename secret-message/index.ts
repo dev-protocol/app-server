@@ -38,7 +38,9 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 		}
 
 		const web3 = new Web3(
-			`https://${network}.infura.io/v3/${process.env.INFURA_IO_SECRET}`
+			new Web3.providers.HttpProvider(
+				`https://${network}.infura.io/v3/${process.env.INFURA_IO_PROJECT}`
+			)
 		)
 		const account = web3.eth.accounts.recover('hello', signature)
 		const address =
@@ -47,7 +49,6 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 				: network === 'ropsten'
 				? '0x8BCA5A841aFAD83b78c850de130dc046F3424736'
 				: ''
-		console.log(address)
 		const { getValue } = createLockupContract(web3)(address)
 
 		const stakes = await getValue(property, account).then(x => new BigNumber(x))
@@ -56,7 +57,9 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 			return response(402)
 		}
 
-		const message = messages.find(({ address }) => address === property)
+		const message = messages.find(
+			({ address }) => address.toLowerCase() === property.toLowerCase()
+		)
 
 		if (message === undefined) {
 			return response(404)

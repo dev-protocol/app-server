@@ -62,7 +62,7 @@ const prepare = ({
 	const network = 'ropsten'
 	store.set(property, '1000000000000000000')
 	process.env.CIPHER_KEY = 'password'
-	process.env.INFURA_IO_SECRET = 'a94a87a07f4d4065a4284190baad8b38' // For testing
+	process.env.INFURA_IO_PROJECT = '9ca60bd34e2a42f0ae9fe6fbd652d754' // For testing
 	return {
 		network,
 		messages,
