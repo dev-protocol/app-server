@@ -1,6 +1,7 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import Web3 from 'web3'
 import messages from './messages.json'
+import messagesRopsten from './messages.ropsten.json'
 import { createLockupContract } from '@dev-protocol/dev-kit-js/cjs/lockup'
 import BigNumber from 'bignumber.js'
 import { config } from 'dotenv'
@@ -42,7 +43,10 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 				`https://${network}.infura.io/v3/${process.env.INFURA_IO_PROJECT}`
 			)
 		)
-		const account = web3.eth.accounts.recover('Please sign to confirm your address.', signature)
+		const account = web3.eth.accounts.recover(
+			'Please sign to confirm your address.',
+			signature
+		)
 		const address =
 			network === 'mainnet'
 				? '0x71A25Bb05C68037B867E165c229D0c30e73f07Ad'
@@ -57,7 +61,7 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 			return response(402)
 		}
 
-		const message = messages.find(
+		const message = (network === 'ropsten' ? messagesRopsten : messages).find(
 			({ address }) => address.toLowerCase() === property.toLowerCase()
 		)
 
