@@ -38,9 +38,11 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 			return response(400)
 		}
 
+		const net =
+			network === 'main' || network === 'mainnet' ? 'mainnet' : network
 		const web3 = new Web3(
 			new Web3.providers.HttpProvider(
-				`https://${network}.infura.io/v3/${process.env.INFURA_IO_PROJECT}`
+				`https://${net}.infura.io/v3/${process.env.INFURA_IO_PROJECT}`
 			)
 		)
 		const account = web3.eth.accounts.recover(
@@ -48,9 +50,9 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 			signature
 		)
 		const address =
-			network === 'main' || network === 'mainnet'
+			net === 'mainnet'
 				? '0x71A25Bb05C68037B867E165c229D0c30e73f07Ad'
-				: network === 'ropsten'
+				: net === 'ropsten'
 				? '0x8BCA5A841aFAD83b78c850de130dc046F3424736'
 				: ''
 		const { getValue } = createLockupContract(web3)(address)
