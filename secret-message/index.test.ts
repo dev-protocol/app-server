@@ -59,7 +59,7 @@ const prepare = ({
 	const property = '0x3EE1dF804544B2326b827AE30dDC9A93C35002D5'
 	const ciphertext = cipher(message, 'password')
 	const messages = [{ address: property, ciphertext }]
-	const network = 'mainnet'
+	const network = 'main'
 	store.set(property, '1000000000000000000')
 	process.env.CIPHER_KEY = 'password'
 	process.env.INFURA_IO_PROJECT = '9ca60bd34e2a42f0ae9fe6fbd652d754' // For testing
