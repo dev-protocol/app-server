@@ -51,7 +51,7 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 		)
 		const address =
 			net === 'mainnet'
-				? '0x71A25Bb05C68037B867E165c229D0c30e73f07Ad'
+				? '0x3d40fab11ee30E3aa1900cCfAFD190F0851a6157'
 				: net === 'ropsten'
 				? '0x8BCA5A841aFAD83b78c850de130dc046F3424736'
 				: ''
