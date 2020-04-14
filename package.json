@@ -27,7 +27,7 @@
 		"eslint": "6.8.0",
 		"eslint-config-prettier": "6.10.0",
 		"eslint-config-xo": "0.27.2",
-		"eslint-config-xo-typescript": "0.24.1",
+		"eslint-config-xo-typescript": "0.27.0",
 		"eslint-plugin-prettier": "3.1.2",
 		"esm": "3.2.25",
 		"ganache-cli": "6.9.0",
