@@ -19,14 +19,14 @@ const responseCreator = (context: Context) => (
 ) => {
 	context.res = {
 		status,
-		body
+		body,
 	}
 }
 
 const digits18 = (x: number): BigNumber => new BigNumber(10).pow(18).times(x)
 
 export const httpTrigger = (messages: SecretMessages): AzureFunction =>
-	async function(context: Context, req: HttpRequest): Promise<void> {
+	async function (context: Context, req: HttpRequest): Promise<void> {
 		const response = responseCreator(context)
 		const { query } = req
 		const { property, signature, network } = query
@@ -57,7 +57,9 @@ export const httpTrigger = (messages: SecretMessages): AzureFunction =>
 				: ''
 		const { getValue } = createLockupContract(web3)(address)
 
-		const stakes = await getValue(property, account).then(x => new BigNumber(x))
+		const stakes = await getValue(property, account).then(
+			(x) => new BigNumber(x)
+		)
 
 		if (stakes.isLessThan(digits18(1))) {
 			return response(402)

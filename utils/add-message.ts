@@ -11,7 +11,7 @@ const [, , address, message] = process.argv
 const ciphertext = configuredCipher(message)
 const data = {
 	address,
-	ciphertext
+	ciphertext,
 }
 const added = [...messages, data]
 

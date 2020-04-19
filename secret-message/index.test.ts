@@ -16,12 +16,12 @@ const httpTrigger = async (
 ): Promise<{
 	[key: string]: any
 }> =>
-	new Promise(resolve => {
+	new Promise((resolve) => {
 		_httpTrigger(messages)(
 			({
 				set res(v: any) {
 					resolve(v)
-				}
+				},
 			} as unknown) as Context,
 			request
 		)
@@ -33,8 +33,9 @@ const store = new Map<string, string>()
 before(async () => {
 	ganache = await launchGanache(7545)
 	stub(lockup, 'createLockupContract').callsFake(() => () =>
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		({
-			getValue: async (address: string) => store.get(address)
+			getValue: async (address: string) => store.get(address),
 		} as any)
 	)
 })
@@ -44,7 +45,7 @@ after(() => {
 })
 
 const prepare = ({
-	message
+	message,
 }: {
 	message: string
 }): {
@@ -67,13 +68,13 @@ const prepare = ({
 		network,
 		messages,
 		signature,
-		property
+		property,
 	}
 }
 
-test('returns deciphered text', async t => {
+test('returns deciphered text', async (t) => {
 	const { network, messages, signature, property } = prepare({
-		message: 'Hello World'
+		message: 'Hello World',
 	})
 
 	const res = await httpTrigger(
@@ -82,20 +83,20 @@ test('returns deciphered text', async t => {
 			query: {
 				property,
 				network,
-				signature
-			}
+				signature,
+			},
 		})
 	)
 
 	t.deepEqual(res, {
 		status: 200,
-		body: 'Hello World'
+		body: 'Hello World',
 	})
 })
 
-test('returns a response with status code 400 when property address is not founded in the query string', async t => {
+test('returns a response with status code 400 when property address is not founded in the query string', async (t) => {
 	const { network, messages, signature } = prepare({
-		message: 'Hello World'
+		message: 'Hello World',
 	})
 
 	const res = await httpTrigger(
@@ -103,20 +104,20 @@ test('returns a response with status code 400 when property address is not found
 		req({
 			query: {
 				network,
-				signature
-			}
+				signature,
+			},
 		})
 	)
 
 	t.deepEqual(res, {
 		status: 400,
-		body: ''
+		body: '',
 	})
 })
 
-test('returns a response with status code 400 when a network is not founded in the request body', async t => {
+test('returns a response with status code 400 when a network is not founded in the request body', async (t) => {
 	const { messages, signature, property } = prepare({
-		message: 'Hello World'
+		message: 'Hello World',
 	})
 
 	const res = await httpTrigger(
@@ -124,20 +125,20 @@ test('returns a response with status code 400 when a network is not founded in t
 		req({
 			query: {
 				property,
-				signature
-			}
+				signature,
+			},
 		})
 	)
 
 	t.deepEqual(res, {
 		status: 400,
-		body: ''
+		body: '',
 	})
 })
 
-test('returns a response with status code 400 when a signature is not founded in the request body', async t => {
+test('returns a response with status code 400 when a signature is not founded in the request body', async (t) => {
 	const { network, messages, property } = prepare({
-		message: 'Hello World'
+		message: 'Hello World',
 	})
 
 	const res = await httpTrigger(
@@ -145,20 +146,20 @@ test('returns a response with status code 400 when a signature is not founded in
 		req({
 			query: {
 				property,
-				network
-			}
+				network,
+			},
 		})
 	)
 
 	t.deepEqual(res, {
 		status: 400,
-		body: ''
+		body: '',
 	})
 })
 
-test('returns a response with status code 402 when sent from an account that staking to specified property is less than 1 DEV', async t => {
+test('returns a response with status code 402 when sent from an account that staking to specified property is less than 1 DEV', async (t) => {
 	const { network, messages, signature } = prepare({
-		message: 'Hello World'
+		message: 'Hello World',
 	})
 	const property = '0x2C55AFeDC55525f974D23E9FE410478aF8a0F6Ce'
 
@@ -170,20 +171,20 @@ test('returns a response with status code 402 when sent from an account that sta
 			query: {
 				property,
 				network,
-				signature
-			}
+				signature,
+			},
 		})
 	)
 
 	t.deepEqual(res, {
 		status: 402,
-		body: ''
+		body: '',
 	})
 })
 
-test('returns a response with status code 404 when a property address is not founded in the stored messages', async t => {
+test('returns a response with status code 404 when a property address is not founded in the stored messages', async (t) => {
 	const { network, messages, signature, property } = prepare({
-		message: 'Hello World'
+		message: 'Hello World',
 	})
 	const msg = messages.find(({ address }) => address === property)
 	msg.address = '0x000'
@@ -194,13 +195,13 @@ test('returns a response with status code 404 when a property address is not fou
 			query: {
 				property,
 				network,
-				signature
-			}
+				signature,
+			},
 		})
 	)
 
 	t.deepEqual(res, {
 		status: 404,
-		body: ''
+		body: '',
 	})
 })
