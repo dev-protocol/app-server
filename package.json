@@ -32,7 +32,7 @@
 		"esm": "3.2.25",
 		"ganache-cli": "6.9.1",
 		"husky": "4.2.5",
-		"prettier": "1.19.1",
+		"prettier": "2.0.4",
 		"sinon": "9.0.2",
 		"ts-node": "8.8.2",
 		"typescript": "3.8.3"
